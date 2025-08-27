@@ -12,15 +12,13 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import static java.lang.System.currentTimeMillis;
-
-@Entity @Table(name="orders")
+@Entity
+@Table(name = "orders")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @UuidGenerator
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
