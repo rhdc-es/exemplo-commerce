@@ -1,13 +1,14 @@
 'use client';
 
 import { ReactNode, useMemo } from 'react';
-import { ThemeProvider as MuiThemeProvider, CssBaseline, createTheme } from '@mui/material';
+import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
+import { createAppTheme } from './theme';
 import { ThemeContextProvider, useThemeContext } from '../context/ThemeContext';
 import { AuthProvider } from '../context/AuthContext';
 
 const ThemeWrapper = ({ children }: { children: ReactNode }) => {
   const { mode } = useThemeContext();
-  const theme = useMemo(() => createTheme({ palette: { mode } }), [mode]);
+  const theme = useMemo(() => createAppTheme(mode), [mode]);
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
