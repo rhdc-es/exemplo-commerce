@@ -1,4 +1,4 @@
-// types.ts (ou onde você preferir)
+// products.api.ts
 
 export interface Product {
   id: number;
@@ -32,11 +32,11 @@ export interface FetchProductsParams {
 }
 
 /**
- * Busca produtos com suporte a:
- * - lista geral (/products)
- * - busca por termo (/products/search?q=...)
- * - filtro por categoria (/products/category/:category)
- * Todos com paginação (limit/skip).
+ * Lista produtos:
+ * - geral:                 /products
+ * - busca:                 /products/search?q=...
+ * - por categoria:         /products/category/:category
+ * Suporta paginação (limit/skip).
  */
 export async function fetchProducts(
   { q, category, limit = 30, skip = 0 }: FetchProductsParams = {}
@@ -63,7 +63,7 @@ export async function fetchProducts(
   return (await res.json()) as ProductListResponse;
 }
 
-/** Busca um produto pelo ID */
+/** Detalhe de produto por ID */
 export async function fetchProduct(id: number | string): Promise<Product> {
   const res = await fetch(`https://dummyjson.com/products/${id}`);
   if (!res.ok) {
