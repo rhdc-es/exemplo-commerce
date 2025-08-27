@@ -57,6 +57,9 @@ public class Payment {
     public boolean isAuthorized() { return status == PaymentStatus.AUTHORIZED; }
     public boolean isFailed()     { return status == PaymentStatus.FAILED; }
 
+    public void markAuthorized() { this.status = PaymentStatus.AUTHORIZED; }
+    public void markFailed()     { this.status = PaymentStatus.FAILED; }
+
     public static Payment createPending(UUID orderId,
                                         Double amount,
                                         PaymentMethod method) {
