@@ -3,11 +3,12 @@
 import { ReactNode, useMemo } from 'react';
 import { ThemeProvider as MuiThemeProvider, CssBaseline, createTheme } from '@mui/material';
 import { ThemeContextProvider, useThemeContext } from '../context/ThemeContext';
+import { getDesignTokens } from '../theme';
 import { AuthProvider } from '../context/AuthContext';
 
 const ThemeWrapper = ({ children }: { children: ReactNode }) => {
   const { mode } = useThemeContext();
-  const theme = useMemo(() => createTheme({ palette: { mode } }), [mode]);
+  const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
