@@ -1,11 +1,7 @@
 'use client';
 
 import { createContext, useReducer, useContext, ReactNode } from 'react';
-
-export interface Product {
-  id: string;
-  [key: string]: any;
-}
+import type { Product } from '../services/productService';
 
 interface CartItem {
   product: Product;
@@ -18,7 +14,7 @@ interface CartState {
 
 interface CartContextValue extends CartState {
   addItem: (product: Product) => void;
-  removeItem: (id: string) => void;
+  removeItem: (id: number) => void;
   clearCart: () => void;
 }
 
@@ -31,7 +27,7 @@ const CartContext = createContext<CartContextValue>({
 
 type CartAction =
   | { type: 'ADD_ITEM'; product: Product }
-  | { type: 'REMOVE_ITEM'; id: string }
+  | { type: 'REMOVE_ITEM'; id: number }
   | { type: 'CLEAR_CART' };
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
@@ -59,7 +55,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
 
   const addItem = (product: Product) => dispatch({ type: 'ADD_ITEM', product });
-  const removeItem = (id: string) => dispatch({ type: 'REMOVE_ITEM', id });
+  const removeItem = (id: number) => dispatch({ type: 'REMOVE_ITEM', id });
   const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
   return (
