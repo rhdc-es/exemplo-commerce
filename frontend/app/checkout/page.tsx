@@ -11,7 +11,7 @@ function CheckoutPage() {
   const { user } = useAuth();
   const { items, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
-  const [snack, setSnack] = useState<{open: boolean; message: string; severity: 'success' | 'error'} | null>(null);
+  const [snack, setSnack] = useState<{ open: boolean; message: string; severity: 'success' | 'error' } | null>(null);
 
   const handleCheckout = async () => {
     if (!user) return;
@@ -19,7 +19,7 @@ function CheckoutPage() {
     try {
       await orderService.createOrder({
         userId: Number(user.id),
-        products: items.map(i => ({ id: i.product.id, quantity: i.quantity }))
+        products: items.map(({ product, quantity }) => ({ id: product.id, quantity })),
       });
       clearCart();
       setSnack({ open: true, message: 'Pedido realizado com sucesso', severity: 'success' });
@@ -60,4 +60,3 @@ function CheckoutPage() {
 }
 
 export default withAuth(CheckoutPage);
-

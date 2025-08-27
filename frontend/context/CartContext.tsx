@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useReducer, useContext, ReactNode } from 'react';
+import { createContext, useReducer, useContext, ReactNode, useEffect } from 'react';
 import type { Product } from '../services/productService';
 
 interface CartItem {
@@ -22,30 +22,33 @@ const CartContext = createContext<CartContextValue>({
   items: [],
   addItem: () => {},
   removeItem: () => {},
-  clearCart: () => {}
+  clearCart: () => {},
 });
 
 type CartAction =
   | { type: 'ADD_ITEM'; product: Product }
   | { type: 'REMOVE_ITEM'; id: number }
-  | { type: 'CLEAR_CART' };
+  | { type: 'CLEAR_CART' }
+  | { type: 'SET_ITEMS'; items: CartItem[] };
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const index = state.items.findIndex(item => item.product.id === action.product.id);
-      if (index >= 0) {
-        const items = state.items.map((item, i) =>
-          i === index ? { ...item, quantity: item.quantity + 1 } : item
+      const idx = state.items.findIndex((i) => i.product.id === action.product.id);
+      if (idx >= 0) {
+        const items = state.items.map((i, k) =>
+          k === idx ? { ...i, quantity: i.quantity + 1 } : i
         );
         return { items };
       }
       return { items: [...state.items, { product: action.product, quantity: 1 }] };
     }
     case 'REMOVE_ITEM':
-      return { items: state.items.filter(item => item.product.id !== action.id) };
+      return { items: state.items.filter((i) => i.product.id !== action.id) };
     case 'CLEAR_CART':
       return { items: [] };
+    case 'SET_ITEMS':
+      return { items: action.items };
     default:
       return state;
   }
@@ -58,6 +61,30 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const removeItem = (id: number) => dispatch({ type: 'REMOVE_ITEM', id });
   const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
+  // carrega do localStorage (SSR-safe)
+  useEffect(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('cart') : null;
+      if (raw) {
+        const parsed = JSON.parse(raw) as CartItem[];
+        if (Array.isArray(parsed)) dispatch({ type: 'SET_ITEMS', items: parsed });
+      }
+    } catch {
+      /* ignora JSON inválido */
+    }
+  }, []);
+
+  // salva no localStorage
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('cart', JSON.stringify(state.items));
+      }
+    } catch {
+      /* storage pode falhar (quota/privado) */
+    }
+  }, [state.items]);
+
   return (
     <CartContext.Provider value={{ items: state.items, addItem, removeItem, clearCart }}>
       {children}
@@ -66,4 +93,3 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useCart = () => useContext(CartContext);
-
