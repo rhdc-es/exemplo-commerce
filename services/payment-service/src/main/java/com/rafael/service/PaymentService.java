@@ -27,12 +27,6 @@ public class PaymentService {
     public void process(UUID orderId, Double amount, PaymentMethod method) {
         log.info("Iniciando processamento do pagamento. orderId={}, amount={}, method={}", orderId, amount, method);
 
-//        var order = paymentRepository.findTopByOrderIdOrderByCreatedAtDesc(orderId);
-//        if (order.isEmpty()) {
-//            log.warn("Nenhum pedido encontrado para orderId={}. Encerrando processamento.", orderId);
-//            return;
-//        }
-
         var payment = Payment.createPending(orderId, amount, method);
         log.debug("Pagamento pendente criado: {}", payment);
         paymentRepository.save(payment);
@@ -44,7 +38,7 @@ public class PaymentService {
             log.debug("Resposta do gateway: approved={}, transactionId={}", result.approved(), result.transactionId());
 
             if (result.approved()) {
-                payment.isAuthorized();
+                payment.markAuthorized();
                 paymentRepository.save(payment);
                 log.info("Pagamento autorizado e salvo. paymentId={}", payment.getId());
             }
@@ -64,7 +58,7 @@ public class PaymentService {
         } catch (RuntimeException ex) {
             log.error("Erro ao processar pagamento para orderId={}, motivo: {}", orderId, ex.getMessage(), ex);
 
-            payment.isFailed();
+            payment.markFailed();
             paymentRepository.save(payment);
             log.warn("Pagamento marcado como falhado. paymentId={}", payment.getId());
 
