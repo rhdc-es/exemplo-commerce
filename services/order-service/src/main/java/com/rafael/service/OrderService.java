@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,7 +74,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderResponse getById(Long id) {
+    public OrderResponse getById(UUID id) {
         Order orderResponse = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ordem não encontrada: " + id));
         return new OrderResponse(
