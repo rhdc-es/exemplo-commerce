@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<OrderResponse> getById(@PathVariable("id") UUID id) {
         OrderResponse order = service.getById(id);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }

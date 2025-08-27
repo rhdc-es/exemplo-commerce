@@ -75,7 +75,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderResponse getById(Long id) {
+    public OrderResponse getById(UUID id) {
         Order orderResponse = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ordem não encontrada: " + id));
         return new OrderResponse(
