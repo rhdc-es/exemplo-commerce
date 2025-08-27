@@ -1,11 +1,8 @@
 package com.rafael.messaging;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-
-import java.io.Serializable;
 
 @RequiredArgsConstructor
 @Component
