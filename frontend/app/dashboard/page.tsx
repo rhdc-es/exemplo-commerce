@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { withAuth } from '../../components/withAuth';
 import { useEffect, useState } from 'react';
-import { listProducts, Product } from '../../services/productService';
+import { fetchProducts, Product } from '../../services/productService';
 
 function DashboardPage() {
   const { user, signOut } = useAuth();
@@ -18,7 +18,7 @@ function DashboardPage() {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    listProducts(pageSize, page * pageSize).then((data) => {
+    fetchProducts({ limit: pageSize, skip: page * pageSize }).then((data) => {
       setProducts(data.products);
       setTotal(data.total);
     });
