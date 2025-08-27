@@ -12,9 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 
 @Slf4j
@@ -30,7 +28,7 @@ public class OrderService {
         log.info("Criando nova ordem de compra!");
 
         var items = request.items().stream()
-                .map(i -> new OrderItem(i.name(), i.unitPrice(), i.quantity()))
+                .map(i -> new OrderItem(i.name(), i.price(), i.quantity()))
                 .toList();
 
         var order = new Order(items, request.customerId(), request.paymentMethod());

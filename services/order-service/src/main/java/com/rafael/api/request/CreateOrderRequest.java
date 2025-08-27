@@ -12,9 +12,8 @@ public record CreateOrderRequest(
         @NotNull PaymentMethod paymentMethod
 ) {
     public record Item(
-            @NotNull UUID id,
             @NotBlank String name,
             @Min(1) int quantity,
-            @DecimalMin("0.00") Double unitPrice
+            @DecimalMin("0.00") Double price
     ) {}
 }
