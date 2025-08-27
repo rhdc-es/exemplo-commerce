@@ -8,7 +8,9 @@ import { AuthProvider } from '../context/AuthContext';
 
 const ThemeWrapper = ({ children }: { children: ReactNode }) => {
   const { mode } = useThemeContext();
+
   const theme = useMemo(() => createAppTheme(mode), [mode]);
+
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
