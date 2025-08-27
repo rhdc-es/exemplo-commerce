@@ -25,7 +25,7 @@ const schema = z.object({
 });
 
 function SignupPage() {
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({ resolver: zodResolver(schema) });
   const [snack, setSnack] = useState<{open: boolean; message: string; severity: 'success' | 'error'} | null>(null);
   const router = useRouter();
 
@@ -43,10 +43,30 @@ function SignupPage() {
     <AuthCard title="Cadastro">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
-          <TextField label="Nome" {...register('name')} />
-          <TextField label="Email" {...register('email')} />
-          <PasswordField label="Senha" {...register('password')} />
-          <PasswordField label="Confirmar senha" {...register('confirmPassword')} />
+          <TextField
+            label="Nome"
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            {...register('name')}
+          />
+          <TextField
+            label="Email"
+            error={!!errors.email}
+            helperText={errors.email?.message}
+            {...register('email')}
+          />
+          <PasswordField
+            label="Senha"
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            {...register('password')}
+          />
+          <PasswordField
+            label="Confirmar senha"
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword?.message}
+            {...register('confirmPassword')}
+          />
           <Button type="submit" variant="contained" disabled={isSubmitting}>
             {isSubmitting ? 'Enviando...' : 'Cadastrar'}
           </Button>
