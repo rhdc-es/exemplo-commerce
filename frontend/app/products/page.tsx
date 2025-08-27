@@ -2,11 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import {
-  Grid,
   Card,
   CardContent,
-  CardActions,
-  CardMedia,
   Typography,
   Button,
   TextField,
@@ -15,7 +12,11 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Box,
+  Rating,
+  Zoom,
 } from '@mui/material';
+import Image from 'next/image';
 import { fetchProducts, fetchCategories, Product } from '../../services/productService';
 import { useCart } from '../../context/CartContext';
 
@@ -35,6 +36,7 @@ export default function ProductsPage() {
   // paginação
   const [skip, setSkip] = useState(0);
   const limit = 12;
+  const [hovered, setHovered] = useState<number | null>(null);
 
   // carregar produtos
   useEffect(() => {
@@ -131,28 +133,70 @@ export default function ProductsPage() {
         </Button>
       </Stack>
 
-      <Grid container spacing={2}>
+      <Box
+        sx={{
+          display: 'grid',
+          gap: { xs: 2, md: 3 },
+          gridTemplateColumns: '1fr',
+          containerType: 'inline-size',
+          '@container (min-width: 600px)': {
+            gridTemplateColumns: 'repeat(2, 1fr)',
+          },
+          '@container (min-width: 900px)': {
+            gridTemplateColumns: 'repeat(3, 1fr)',
+          },
+        }}
+      >
         {products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
-            <Card>
-              <CardMedia component="img" height="140" image={product.thumbnail} alt={product.title} />
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="div">
-                  {product.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {`$${product.price}`}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small" variant="contained" onClick={() => handleAddToCart(product)}>
-                  Adicionar ao carrinho
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
+          <Card
+            key={product.id}
+            onMouseEnter={() => setHovered(product.id)}
+            onMouseLeave={() => setHovered(null)}
+            sx={{
+              position: 'relative',
+              overflow: 'hidden',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+              boxShadow: hovered === product.id ? 6 : 1,
+              transform: hovered === product.id ? 'translateY(-4px)' : 'none',
+            }}
+          >
+            <Box sx={{ position: 'relative', aspectRatio: '4/3' }}>
+              <Image src={product.thumbnail} alt={product.title} fill style={{ objectFit: 'cover' }} />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  left: 8,
+                  bgcolor: 'primary.main',
+                  color: 'primary.contrastText',
+                  px: 1,
+                  py: 0.5,
+                  borderRadius: 1,
+                  fontWeight: 'bold',
+                }}
+              >
+                {`$${product.price}`}
+              </Box>
+            </Box>
+            <CardContent>
+              <Typography gutterBottom variant="h6" component="div">
+                {product.title}
+              </Typography>
+              <Rating value={product.rating} precision={0.1} readOnly size="small" />
+            </CardContent>
+            <Zoom in={hovered === product.id} unmountOnExit>
+              <Button
+                size="small"
+                variant="contained"
+                onClick={() => handleAddToCart(product)}
+                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+              >
+                Adicionar ao carrinho
+              </Button>
+            </Zoom>
+          </Card>
         ))}
-      </Grid>
+      </Box>
 
       <Stack direction="row" spacing={2} justifyContent="center">
         <Button onClick={() => setSkip((s) => Math.max(0, s - limit))} disabled={!canPrev}>
