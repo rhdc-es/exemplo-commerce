@@ -1,32 +1,82 @@
+// products.api.ts
+
 export interface Product {
   id: number;
   title: string;
+  description: string;
   price: number;
-  thumbnail: string;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand: string;
   category: string;
+  thumbnail: string;
+  images: string[];
 }
 
-export async function fetchProducts(params: { q?: string; category?: string } = {}): Promise<Product[]> {
-  const { q, category } = params;
-  let url = 'https://dummyjson.com/products';
+export interface ProductListResponse {
+  products: Product[];
+  total: number;
+  skip: number;
+  limit: number;
+}
+
+export interface FetchProductsParams {
+  /** termo de busca */
+  q?: string;
+  /** slug da categoria (ex.: "smartphones") */
+  category?: string;
+  /** paginação */
+  limit?: number;
+  skip?: number;
+}
+
+/**
+ * Lista produtos:
+ * - geral:                 /products
+ * - busca:                 /products/search?q=...
+ * - por categoria:         /products/category/:category
+ * Suporta paginação (limit/skip).
+ */
+export async function fetchProducts(
+  { q, category, limit = 30, skip = 0 }: FetchProductsParams = {}
+): Promise<ProductListResponse> {
+  let base = 'https://dummyjson.com/products';
+
   if (q) {
-    url += `/search?q=${encodeURIComponent(q)}`;
+    base += '/search';
   } else if (category) {
-    url += `/category/${encodeURIComponent(category)}`;
+    base += `/category/${encodeURIComponent(category)}`;
   }
+
+  const params = new URLSearchParams();
+  params.set('limit', String(limit));
+  params.set('skip', String(skip));
+  if (q) params.set('q', q);
+
+  const url = `${base}?${params.toString()}`;
 
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error('Failed to fetch products');
   }
-  const data = await res.json();
-  return data.products;
+  return (await res.json()) as ProductListResponse;
 }
 
+/** Detalhe de produto por ID */
+export async function fetchProduct(id: number | string): Promise<Product> {
+  const res = await fetch(`https://dummyjson.com/products/${id}`);
+  if (!res.ok) {
+    throw new Error('Failed to fetch product');
+  }
+  return (await res.json()) as Product;
+}
+
+/** Lista as categorias disponíveis */
 export async function fetchCategories(): Promise<string[]> {
   const res = await fetch('https://dummyjson.com/products/categories');
   if (!res.ok) {
     throw new Error('Failed to fetch categories');
   }
-  return res.json();
+  return (await res.json()) as string[];
 }
