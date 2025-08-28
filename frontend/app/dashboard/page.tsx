@@ -1,77 +1,58 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import {
-  AppBar,
-  Toolbar,
   Typography,
-  Button,
   Pagination,
+  Toolbar,
   Card,
   CardContent,
+  Button,
   Box,
   Rating,
   Zoom,
 } from '@mui/material';
 import Image from 'next/image';
-import ThemeToggle from '../../components/ThemeToggle';
+import Header from '../../components/Header';
 import { useAuth } from '../../context/AuthContext';
-import { useRouter } from 'next/navigation';
 import { withAuth } from '../../components/withAuth';
-import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
-import { fetchProducts, Product } from '../../services/productService';
+import { fetchProducts, type Product } from '../../services/productService';
 
 function DashboardPage() {
-  const { user, signOut } = useAuth();
-  const router = useRouter();
+  const { user } = useAuth();
   const { addItem } = useCart();
 
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize] = useState(10);
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [hovered, setHovered] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchProducts({ limit: pageSize, skip: page * pageSize }).then((data) => {
+    (async () => {
+      const data = await fetchProducts({ limit: pageSize, skip: page * pageSize });
       setProducts(data.products);
       setTotal(data.total);
-    });
+    })();
   }, [page, pageSize]);
 
   const pageCount = Math.ceil(total / pageSize);
 
   const handleAddToCart = (product: Product) => {
-    addItem({
-      id: String(product.id),
-      title: product.title,
-      price: product.price,
-      thumbnail: product.thumbnail,
-    });
+    // CartContext espera Product completo
+    addItem(product);
   };
 
   return (
     <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Dashboard
-          </Typography>
-          <ThemeToggle />
-          <Button
-            color="inherit"
-            onClick={() => {
-              signOut();
-              router.replace('/login');
-            }}
-          >
-            Sair
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Header />
+      <Toolbar />
+
       <Typography variant="h4" sx={{ mt: 4, textAlign: 'center' }}>
         Bem-vindo, {user.name}
       </Typography>
+
       <Box
         sx={{
           p: 4,
@@ -100,12 +81,13 @@ function DashboardPage() {
               transform: hovered === product.id ? 'translateY(-4px)' : 'none',
             }}
           >
-            <Box sx={{ position: 'relative', aspectRatio: '4/3' }}>
+            <Box sx={{ position: 'relative', aspectRatio: '4 / 3' }}>
               <Image
                 src={product.thumbnail}
                 alt={product.title}
                 fill
                 style={{ objectFit: 'cover' }}
+                sizes="(max-width: 900px) 100vw, 33vw"
               />
               <Box
                 sx={{
@@ -123,12 +105,14 @@ function DashboardPage() {
                 {`$${product.price}`}
               </Box>
             </Box>
+
             <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
+              <Typography gutterBottom variant="h6" component="div" noWrap>
                 {product.title}
               </Typography>
               <Rating value={product.rating} precision={0.1} readOnly size="small" />
             </CardContent>
+
             <Zoom in={hovered === product.id} unmountOnExit>
               <Button
                 size="small"
@@ -142,6 +126,7 @@ function DashboardPage() {
           </Card>
         ))}
       </Box>
+
       <Pagination
         count={pageCount}
         page={page + 1}
