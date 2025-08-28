@@ -11,7 +11,7 @@ interface Props {
 export default function AuthCard({ title, children }: Props) {
   return (
     <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <Card sx={{ width: '100%' }}>
+      <Card sx={{ width: '100%', bgcolor: 'background.paper' }}>
         <CardContent>
           <Typography variant="h5" component="h1" gutterBottom>
             {title}

@@ -21,6 +21,7 @@ export default function ProductCard({ product, hovered, setHovered, onAddToCart 
         transition: 'transform 0.3s, box-shadow 0.3s',
         boxShadow: hovered === product.id ? 6 : 1,
         transform: hovered === product.id ? 'translateY(-4px)' : 'none',
+        bgcolor: 'background.paper',
       }}
     >
       <Box sx={{ position: 'relative', aspectRatio: '4/3' }}>
@@ -51,6 +52,7 @@ export default function ProductCard({ product, hovered, setHovered, onAddToCart 
         <Button
           size="small"
           variant="contained"
+          color="primary"
           onClick={() => onAddToCart(product)}
           sx={{ position: 'absolute', bottom: 16, right: 16 }}
         >

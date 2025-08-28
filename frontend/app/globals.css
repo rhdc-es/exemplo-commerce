@@ -38,10 +38,12 @@ p, h1, h2, h3, h4, h5, h6 {
   color-scheme: light dark;
 
   /* Colors */
-  --color-bg: #ffffff;
+  --color-bg: #e3f2fd;
   --color-text: #111111;
-  --color-primary: #0070f3;
-  --color-secondary: #666666;
+  --color-primary: #1565c0;
+  --color-secondary: #64b5f6;
+  --color-primary-light: #64b5f6;
+  --color-primary-dark: #0d47a1;
 
   /* Spacing */
   --space-xs: clamp(0.25rem, 0.23rem + 0.25vw, 0.5rem);
@@ -62,9 +64,11 @@ p, h1, h2, h3, h4, h5, h6 {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #111111;
+    --color-bg: #0d47a1;
     --color-text: #f5f5f5;
-    --color-primary: #3291ff;
-    --color-secondary: #999999;
+    --color-primary: #1565c0;
+    --color-secondary: #64b5f6;
+    --color-primary-light: #64b5f6;
+    --color-primary-dark: #0d47a1;
   }
 }
