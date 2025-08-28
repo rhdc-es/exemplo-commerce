@@ -30,7 +30,7 @@ export default function ProductsPage() {
 
   // paginação
   const [skip, setSkip] = useState(0);
-  const limit = 12;
+  const limit = 10;
   const [hovered, setHovered] = useState<number | null>(null);
 
   // carregar produtos
@@ -132,13 +132,12 @@ export default function ProductsPage() {
         sx={{
           display: 'grid',
           gap: { xs: 2, md: 3 },
-          gridTemplateColumns: '1fr',
-          containerType: 'inline-size',
-          '@container (min-width: 600px)': {
-            gridTemplateColumns: 'repeat(2, 1fr)',
-          },
-          '@container (min-width: 900px)': {
-            gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateColumns: {
+            xs: 'repeat(1, 1fr)',
+            sm: 'repeat(2, 1fr)',
+            md: 'repeat(3, 1fr)',
+            lg: 'repeat(4, 1fr)',
+            xl: 'repeat(5, 1fr)',
           },
         }}
       >
