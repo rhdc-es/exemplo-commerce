@@ -5,15 +5,15 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
     mode,
     ...(mode === 'light'
       ? {
-          primary: { main: '#0d47a1' },
-          secondary: { main: '#00695c' },
-          background: { default: '#fafafa', paper: '#ffffff' },
+          primary: { main: '#1565c0', contrastText: '#ffffff' },
+          secondary: { main: '#64b5f6', contrastText: '#ffffff' },
+          background: { default: '#e3f2fd', paper: '#ffffff' },
           text: { primary: '#000000', secondary: '#333333' }
         }
       : {
-          primary: { main: '#90caf9' },
-          secondary: { main: '#80cbc4' },
-          background: { default: '#121212', paper: '#1e1e1e' },
+          primary: { main: '#1565c0', contrastText: '#ffffff' },
+          secondary: { main: '#64b5f6', contrastText: '#ffffff' },
+          background: { default: '#0d47a1', paper: '#1565c0' },
           text: { primary: '#ffffff', secondary: '#e0e0e0' }
         })
   }

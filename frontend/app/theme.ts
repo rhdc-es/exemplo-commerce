@@ -4,11 +4,16 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
   palette: {
     mode,
     primary: {
-      main: '#1976d2',
+      main: '#1565c0',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: '#9c27b0',
+      main: '#64b5f6',
+      contrastText: '#ffffff',
     },
+    background: mode === 'light'
+      ? { default: '#e3f2fd', paper: '#ffffff' }
+      : { default: '#0d47a1', paper: '#1565c0' },
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
