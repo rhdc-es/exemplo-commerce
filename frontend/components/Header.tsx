@@ -79,7 +79,7 @@ export default function Header() {
           variant="h6"
           component={Link}
           href="/"
-          sx={{ textDecoration: 'none', color: 'inherit', flexGrow: { xs: 0, sm: 1 } }}
+          sx={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}
         >
           Exemplo Commerce
         </Typography>

@@ -1,16 +1,14 @@
 'use client';
 
-import { AppBar, Toolbar, Typography, Button, Pagination } from '@mui/material';
-import ThemeToggle from '../../components/ThemeToggle';
+import { Typography, Pagination, Toolbar } from '@mui/material';
+import Header from '../../components/Header';
 import { useAuth } from '../../context/AuthContext';
-import { useRouter } from 'next/navigation';
 import { withAuth } from '../../components/withAuth';
 import { useEffect, useState } from 'react';
 import { fetchProducts, Product } from '../../services/productService';
 
 function DashboardPage() {
-  const { user, signOut } = useAuth();
-  const router = useRouter();
+  const { user } = useAuth();
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
@@ -28,23 +26,8 @@ function DashboardPage() {
 
   return (
     <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Dashboard
-          </Typography>
-          <ThemeToggle />
-          <Button
-            color="inherit"
-            onClick={() => {
-              signOut();
-              router.replace('/login');
-            }}
-          >
-            Sair
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Header />
+      <Toolbar />
       <Typography variant="h4" sx={{ mt: 4, textAlign: 'center' }}>
         Bem-vindo, {user.name}
       </Typography>
